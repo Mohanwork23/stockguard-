@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: stockguard
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:stockguard}
+    username: ${DB_USER:stockguard}
+    password: ${DB_PASSWORD:stockguard}
+
+  jpa:
+    hibernate:
+      ddl-auto: update   # switch to 'validate' + Flyway once schema stabilizes (Week 1 stretch goal)
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+
+server:
+  port: 8080
+
+jwt:
+  secret: ${JWT_SECRET:change-this-in-real-deployment-use-env-var}
+  expiration-ms: 3600000

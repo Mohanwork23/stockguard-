@@ -1,7 +1,12 @@
 package com.mohan.stockguard.controller;
 
+import com.mohan.stockguard.dto.InventoryAnalyticsResponse;
+import com.mohan.stockguard.dto.PaginatedResponse;
 import com.mohan.stockguard.dto.ProductRequest;
+import com.mohan.stockguard.dto.ProductSearchRequest;
 import com.mohan.stockguard.entity.Product;
+import com.mohan.stockguard.service.InventoryAnalyticsService;
+import com.mohan.stockguard.service.ProductSearchService;
 import com.mohan.stockguard.service.ProductService;
 import com.mohan.stockguard.service.RateLimitService;
 import jakarta.validation.Valid;
@@ -18,6 +23,8 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductSearchService productSearchService;
+    private final InventoryAnalyticsService inventoryAnalyticsService;
     private final RateLimitService rateLimitService;
 
     @GetMapping
@@ -37,6 +44,25 @@ public class ProductController {
             return ResponseEntity.status(429).build();
         }
         return ResponseEntity.ok(productService.getProduct(id));
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<PaginatedResponse<Product>> searchProducts(
+        @RequestBody ProductSearchRequest request,
+        @RequestHeader(value = "X-Client-Id", required = false) String clientId
+    ) {
+        if (!rateLimitService.tryConsume(getRateLimitKey(clientId))) {
+            return ResponseEntity.status(429).build();
+        }
+        PaginatedResponse<Product> result = productSearchService.searchProducts(request);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/analytics/inventory")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<InventoryAnalyticsResponse> getInventoryAnalytics() {
+        InventoryAnalyticsResponse analytics = inventoryAnalyticsService.getAnalytics();
+        return ResponseEntity.ok(analytics);
     }
 
     @PostMapping
@@ -67,3 +93,4 @@ public class ProductController {
         return clientId != null ? clientId : "anonymous";
     }
 }
+

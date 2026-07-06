@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# stockguard-
-=======
 # StockGuard
 
 **Concurrency-safe inventory reservation and order processing system, built with Spring Boot.**
@@ -67,6 +64,7 @@ Redis · Bucket4j · RabbitMQ · Docker / Docker Compose · GitHub Actions · AW
 - [ ] Day 19-21: RabbitMQ order-confirmation event + async consumer
 - [ ] Day 22-24: GitHub Actions CI (build + test on every push)
 - [ ] Day 25-26: AWS deployment (EC2/Elastic Beanstalk + RDS + ElastiCache)
+- [ ] Day 26: README cleanup and merge verification
 - [ ] Day 27-28: Concurrency Findings write-up below, final polish
 
 ## Concurrency Findings

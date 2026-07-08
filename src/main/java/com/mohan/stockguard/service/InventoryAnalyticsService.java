@@ -34,8 +34,7 @@ public class InventoryAnalyticsService {
                 .build())
             .collect(Collectors.toList());
 
-        var lowStockAlerts = productRepository.findAll().stream()
-            .filter(p -> p.getAvailableStock() > 0 && p.getAvailableStock() < LOW_STOCK_THRESHOLD)
+        var lowStockAlerts = productRepository.findTop10ByAvailableStockLessThanOrderByAvailableStockAsc(LOW_STOCK_THRESHOLD).stream()
             .map(p -> LowStockAlertDto.builder()
                 .productId(p.getId())
                 .productName(p.getName())

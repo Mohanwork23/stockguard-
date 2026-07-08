@@ -47,4 +47,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT COUNT(p) FROM Product p WHERE p.availableStock > 0 AND p.availableStock < 10")
     Long countLowStock();
+
+    List<Product> findTop10ByAvailableStockLessThanOrderByAvailableStockAsc(Integer stockThreshold);
 }

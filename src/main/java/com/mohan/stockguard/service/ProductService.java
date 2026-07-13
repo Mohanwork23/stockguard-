@@ -58,6 +58,10 @@ public class ProductService {
         return product;
     }
 
+    public List<Product> getLowStockProducts() {
+        return productRepository.findTop10ByAvailableStockLessThanOrderByAvailableStockAsc(10);
+    }
+
     @Transactional
     public Product createProduct(Product product) {
         Product saved = productRepository.save(product);

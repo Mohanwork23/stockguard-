@@ -78,4 +78,22 @@ class ProductServiceTest {
         verify(productCacheService).evictAll();
         verify(productCacheService).evictProduct(1L);
     }
+
+    @Test
+    void getLowStockProductsReturnsLowStockItems() {
+        Product product = Product.builder()
+            .id(2L)
+            .name("Low Stock Item")
+            .price(new BigDecimal("15.00"))
+            .availableStock(4)
+            .build();
+
+        when(productRepository.findTop10ByAvailableStockLessThanOrderByAvailableStockAsc(10))
+            .thenReturn(List.of(product));
+
+        List<Product> result = productService.getLowStockProducts();
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getName()).isEqualTo("Low Stock Item");
+    }
 }

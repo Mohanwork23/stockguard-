@@ -46,6 +46,16 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProduct(id));
     }
 
+    @GetMapping("/low-stock")
+    public ResponseEntity<List<Product>> getLowStockProducts(
+        @RequestHeader(value = "X-Client-Id", required = false) String clientId
+    ) {
+        if (!rateLimitService.tryConsume(getRateLimitKey(clientId))) {
+            return ResponseEntity.status(429).build();
+        }
+        return ResponseEntity.ok(productService.getLowStockProducts());
+    }
+
     @PostMapping("/search")
     public ResponseEntity<PaginatedResponse<Product>> searchProducts(
         @RequestBody ProductSearchRequest request,

@@ -62,5 +62,14 @@ public class OrderController {
         PaginatedResponse<OrderHistoryResponse> history = orderHistoryService.getUserOrderHistoryByStatus(userId, status, pageNumber, pageSize);
         return ResponseEntity.ok(history);
     }
+
+    @GetMapping("/recent")
+    public ResponseEntity<List<Order>> getRecentOrders(
+        @RequestParam(defaultValue = "5") int limit,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        Long userId = userDetails != null ? userDetails.getId() : 1L;
+        return ResponseEntity.ok(orderHistoryService.getRecentOrdersForUser(userId, limit));
+    }
 }
 

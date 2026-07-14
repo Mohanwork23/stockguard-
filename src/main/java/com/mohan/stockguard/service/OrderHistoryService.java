@@ -2,6 +2,7 @@ package com.mohan.stockguard.service;
 
 import com.mohan.stockguard.dto.OrderHistoryResponse;
 import com.mohan.stockguard.dto.PaginatedResponse;
+import com.mohan.stockguard.entity.Order;
 import com.mohan.stockguard.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -67,5 +70,10 @@ public class OrderHistoryService {
             .totalPages(pageResult.getTotalPages())
             .hasMore(pageResult.hasNext())
             .build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Order> getRecentOrdersForUser(Long userId, int limit) {
+        return orderRepository.findByUserIdOrderByCreatedAtDesc(userId, PageRequest.of(0, limit)).getContent();
     }
 }
